@@ -1,0 +1,100 @@
+
+filegroup(
+    name = "libzmq_headers",
+    srcs = [
+        "include/zmq.h",
+		"include/zmq_utils.h"
+    ],
+)
+
+filegroup(
+    name = "libzmq_src",
+    srcs = glob([
+        "src/*.cpp"
+    ]),
+)
+
+filegroup(
+    name = "libzmq_hdrs",
+    srcs = glob([
+        "src/*.hpp",
+        "src/*.h"
+    ]),
+)
+
+filegroup(
+    name = "tweenacl_initial",
+    srcs = [
+        'tweetnacl/src/tweetnacl.h',
+        'tweetnacl/src/tweetnacl_base.h',
+        'tweetnacl/contrib/randombytes/randombytes.h',
+        'tweetnacl/src/tweetnacl.c',
+        'tweetnacl/contrib/randombytes/devurandom.c'
+    ],
+)
+
+cc_library(
+    name = "library_impl",
+    srcs = [
+        "v1/library.c",
+        "v1/library.h",
+    ],
+    visibility = ["//visibility:private"],
+)
+
+cc_library(
+    name = "tweetnacl",
+    hdrs = [
+        "tweetnacl/src/tweetnacl.h",
+        "tweetnacl/src/tweetnacl_base.h",
+        "tweetnacl/contrib/randombytes/randombytes.h"
+    ],
+    srcs = [
+        "tweetnacl/src/tweetnacl.c",
+        "tweetnacl/contrib/randombytes/devurandom.c"
+    ]
+)
+
+genrule(
+    name = 'gen_platform_hpp',
+    outs = ['platform.hpp'],
+    cmd = 'touch $@'
+)
+
+cc_library(
+    name = "zeromq",
+    hdrs = [
+        "libzmq_hdrs",
+        "libzmq_headers",
+        ":gen_platform_hpp",
+    ],
+    srcs = [
+        "libzmq_src",
+    ],
+    deps = [
+        ":tweetnacl",
+    ],
+    includes = [
+        "tweetnacl/src",
+        "tweetnacl/contrib/randombytes",
+        "include"
+    ],
+    copts = [
+        "-D LT_OBJDIR='.libs/'",
+        "-D PACKAGE='zeromq'",
+        "-D PACKAGE_NAME='zeromq'",
+        "-D PACKAGE_STRING='zeromq 4.1.5'",
+        "-D PACKAGE_VERSION='4.1.5'",
+        "-D VERSION='4.1.5'",
+        "-D ZMQ_HAVE_CURVE=1",
+        "-D ZMQ_HAVE_IFADDRS=1",
+        "-D ZMQ_HAVE_OSX=1",
+        "-D ZMQ_HAVE_SO_KEEPALIVE=1",
+        "-D ZMQ_HAVE_TCP_KEEPALIVE=1",
+        "-D ZMQ_HAVE_TCP_KEEPINTVL=1",
+        "-D ZMQ_HAVE_UIO=1",
+        "-D ZMQ_USE_KQUEUE=1",
+        "-D ZMQ_USE_TWEETNACL=1",
+    ],
+    visibility = ["//visibility:public"]
+)

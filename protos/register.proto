@@ -1,0 +1,43 @@
+syntax  = "proto3";
+
+// Registering a service with a router.
+message ServiceRegister {
+	// The name of the service. Needs to be unique for a local network (under a specific router).
+	string name = 1;
+	// The device type of the service.
+	string type = 2;
+	// The version of the device type that the service implements.
+	string type_version = 3;
+	// The port on which the RPC channel is connected.
+	string rpc_port = 4;
+	// The port on which the publishing channel is connected.
+	string publish_port = 5;
+}
+
+// The type of router. Helps when searching for remote sensors. Note: More types can be added in the future. 
+// May move this to a new file to help with addition types being added.
+enum RouterType {
+	// Ground stations are any type that doesn't move with respect to the user. This can include, but isn't limited to
+	//	- Antenna Trackers
+	//	- Computer or phone ground stations
+	//	- Repeaters
+	//	- DGPS ground modules
+	GROUNDSTATION = 0;
+	// An aircraft is anything that moves with respect to the user. This can include, but isn't limmited to
+	//	- Quadcopters
+	//	- Airplanes 
+	//	- Land or water craft
+	AIRCRAFT = 1;
+}
+
+// Registering a router with other routers on the same network. 
+message RouterRegister {
+	// The type of router. Note, the types are above.
+	RouterType type = 1;
+	// The name of the router. Needs to be unique on a network. 
+	string name = 2;
+	// The ip address of the router.
+	string ip_address = 3;
+	// The version of the router.
+	string version = 4;
+}

@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+import register.proto;
+
+// The message for when a service wants to find a device from a router.
+message DeviceRequest {
+	// The device type in the request.
+	string type = 1;
+	// The name of the service that implements the device type. If not supplied, the router will choose a default service
+	string name = 2;
+	// The version of the device type requested. This should be in the form:
+	//	> or = or < and a semantic version. For example, ">0.0.1" or "=1.0.2"
+	string version = 3;
+	// OPTIONAL: The local router type that the service is connected too. This is helpful when, for example, looking for a sensor 
+	//	connected to an aircraft and not a ground station
+	register.RouterType router_type = 4;
+	// OPTIONAL: The name of the router that the service is connected too.
+	string router_name = 5;
+}
+
+// The response from a router when a service has been found.
+message DeviceFound {
+	// The device type.
+	string type = 1;
+	// The name of the service that implements the device.
+	string name = 2;
+	// The version of the device type implemented. Will be in the form "=<semver>".
+	string version = 3;
+	// The IP address of the service.
+	string ip_address  = 4;
+	// The port for RPC communications to the service.
+	string rpc_port = 5;
+	// The port for subscription to the service.
+	string publish_port = 6;
+	// The name of the router the service is connected too.
+	string router_name = 7;
+	// The type of the router the service is connected too. 
+	register.RouterType router_type = 8;
+}
+
+// If the service is found locally, then a router asks other routers if they have the service.
+message RouterDeviceDiscovery {
+	DeviceRequest request = 1;
+}
+
+// If a remote router finds the device, it returns the following message.
+message RouterDeviceFound {
+	DeviceFound device = 1;
+}
