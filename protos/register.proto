@@ -1,5 +1,7 @@
 syntax  = "proto3";
 
+package router;
+
 // Registering a service with a router.
 message ServiceRegister {
 	// The name of the service. Needs to be unique for a local network (under a specific router).

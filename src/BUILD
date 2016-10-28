@@ -1,11 +1,12 @@
 
 cc_binary(
-	name = "server",
+	name = "router",
 	deps = [
 		"@libzmq//:zeromq",
-		"@cppzmq//:cppzmq"
+		"@cppzmq//:cppzmq",
+		"//protos:protos"
 	],
 	srcs = [
-		"test.cpp"
+		"test.cpp",
 	],
 )

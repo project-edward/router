@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-import register.proto;
+import "protos/register.proto";
+
+package router;
 
 // The message for when a service wants to find a device from a router.
 message DeviceRequest {
@@ -13,7 +15,7 @@ message DeviceRequest {
 	string version = 3;
 	// OPTIONAL: The local router type that the service is connected too. This is helpful when, for example, looking for a sensor 
 	//	connected to an aircraft and not a ground station
-	register.RouterType router_type = 4;
+	RouterType router_type = 4;
 	// OPTIONAL: The name of the router that the service is connected too.
 	string router_name = 5;
 }
@@ -35,7 +37,7 @@ message DeviceFound {
 	// The name of the router the service is connected too.
 	string router_name = 7;
 	// The type of the router the service is connected too. 
-	register.RouterType router_type = 8;
+	RouterType router_type = 8;
 }
 
 // If the service is found locally, then a router asks other routers if they have the service.
